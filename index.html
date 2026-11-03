@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ふしぎな発見カード</title>
+  <!-- 外部デザインファイル（CSS）の読み込み -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- 祝福アニメーション用の透明なキャンバス -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- ヘッダー（テーマカラー切り替え機能） -->
+    <header>
+      <div class="app-title-sm">ふしぎな発見カード</div>
+      <div class="theme-selector" title="テーマカラー切り替え">
+        <div class="theme-dot default" onclick="setTheme('default')" aria-label="デフォルトテーマ"></div>
+        <div class="theme-dot marine" onclick="setTheme('marine')" aria-label="マリンブルーテーマ"></div>
+        <div class="theme-dot purple" onclick="setTheme('purple')" aria-label="ネオンパープルテーマ"></div>
+      </div>
+    </header>
+
+    <!-- 1. スタート画面 -->
+    <section id="screen-start" class="screen active">
+      <div class="start-hero">
+        <div class="start-icon">🔮</div>
+        <h1>ふしぎな発見カード</h1>
+        <p>いくつかの直感的な質問に答えて、あなたの隠れた「好奇心のタイプ」を発見しよう！</p>
+      </div>
+      <button class="btn" onclick="startQuiz()">発見をはじめる</button>
+      <button class="btn btn-secondary" onclick="showCollection()" style="margin-top: 8px;">コレクションを見る</button>
+    </section>
+
+    <!-- 2. 質問画面 (選択肢 / スライダー) -->
+    <section id="screen-quiz" class="screen">
+      <!-- 進捗ゲージ (仕掛け②: 進み具合が見える) -->
+      <div class="progress-container">
+        <div class="progress-text">
+          <span>進捗状況</span>
+          <span id="progress-num">質問 1 / 5</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div id="progress-bar" class="progress-bar-fill"></div>
+        </div>
+      </div>
+
+      <!-- 質問内容がJavaScriptによって動的に入るエリア -->
+      <div id="quiz-content"></div>
+    </section>
+
+    <!-- 3. 結果表示画面 (仕掛け④: 予想・発見 & 仕掛け③: 達成を祝う) -->
+    <section id="screen-result" class="screen">
+      <h2 style="text-align: center; font-size: 1.3rem;">あなたの発見カード</h2>
+      <p style="text-align: center; font-size: 0.85rem; color: var(--text-sub);">カードをタップしてめくってみよう！</p>
+
+      <!-- 3D回転カードコンテナ -->
+      <div class="card-flip-container" onclick="flipCard()">
+        <div id="card-inner" class="card-inner">
+          <!-- カード裏面 (隠されている状態) -->
+          <div class="card-front">
+            <div class="card-front-icon">❓</div>
+            <h3>ひみつの発見</h3>
+            <div class="tap-hint">タップしてカードをめくる</div>
+          </div>
+          <!-- カード表面 (判定結果データ) -->
+          <div class="card-back">
+            <span class="result-badge">発見タイプ</span>
+            <div id="res-icon" class="result-icon">✨</div>
+            <h3 id="res-title" class="result-title">---</h3>
+            <p id="res-desc" class="result-desc">---</p>
+            <div id="res-action" class="result-action">おすすめ: ---</div>
+          </div>
+        </div>
+      </div>
+
+      <p class="disclaimer">※この結果はエンターテインメント目的であり、科学的診断ではありません。</p>
+
+      <div style="display: flex; gap: 8px; margin-top: auto;">
+        <button class="btn btn-secondary" style="flex: 1;" onclick="showCollection()">コレクション</button>
+        <button class="btn" style="flex: 2;" onclick="restartQuiz()">もう一度発見する</button>
+      </div>
+    </section>
+
+    <!-- 4. コレクション画面 (仕掛け⑤: 挑戦したくなる & 仕掛け⑦: 変化が積み重なる) -->
+    <section id="screen-collection" class="screen">
+      <div class="collection-header">
+        <h2>発見コレクション</h2>
+        <span id="collection-count" style="font-weight: bold; color: var(--primary);">0 / 6</span>
+      </div>
+      <p style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 12px;">集めたカードはブラウザに自動保存されます。</p>
+
+      <!-- 獲得したカードが動的に並ぶエリア -->
+      <div id="collection-grid" class="collection-grid"></div>
+
+      <button class="btn" onclick="startQuiz()" style="margin-top: auto;">質問に答えてカードを探す</button>
+    </section>
+  </div>
+
+  <!-- 外部プログラムファイル（JavaScript）の読み込み -->
+  <script src="script.js"></script>
+</body>
+</html>
